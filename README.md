@@ -102,7 +102,7 @@ url/users
 
 #### DELETE /posts/:id
 
-This endpoint will [soft-delete]([Difference Between Soft Delete and Hard Delete - GeeksforGeeks](https://www.geeksforgeeks.org/dbms/difference-between-soft-delete-and-hard-delete/)) a specific post.
+This endpoint will [soft-delete](https://www.geeksforgeeks.org/dbms/difference-between-soft-delete-and-hard-delete/) a specific post.
 
 You can access it via this site or just follow this Postman link to implement it: [GET /posts](url)
 
