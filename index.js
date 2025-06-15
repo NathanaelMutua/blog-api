@@ -29,6 +29,7 @@ app.post("/users", validateEnteredInfo, async (req, res) => {
             }
         })
     } catch (e) {
+        console.log(e);
         res.status(400).json({ message: "Something Went Wrong!😓" })
     }
 });
