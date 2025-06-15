@@ -15,9 +15,9 @@ datasource db {
 
 model User {
 	id           String   @id @default(uuid()) @map("user_id")
-	firstName    String      @map("first_name")
+	firstName    String   @map("first_name")
 	lastName     String   @map("last_name")
-	emailAddress String    @unique @map("email_address")
+	emailAddress String   @unique @map("email_address")
 	username     String   @unique @map("username")
 	createdAt    DateTime @default(now()) @map("user_created")
 	updatedAt    DateTime @updatedAt @map("user_updated")

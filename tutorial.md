@@ -55,9 +55,9 @@ In our `schema.prisma` file we will create our model:
 ```prisma
 model User {
     id           String   @id @default(uuid()) @map("user_id")
-    firstName    Int      @map("first_name")
+    firstName    String   @map("first_name")
     lastName     String   @map("last_name")
-    emailAddress String    @unique @map("email_address")
+    emailAddress String   @unique @map("email_address")
     username     String   @unique @map("username")
     createdAt    DateTime @default(now()) @map("user_created")
     updatedAt    DateTime @updatedAt @map("user_updated")
@@ -193,12 +193,13 @@ The block to create a user, ```index.js```:
 ```js
 app.post("/users", validateEnteredInfo, async (req, res) => {
     try{
-        const {firstName, lastName, emailAddress} = req.body
+        const {firstName, lastName, emailAddress, lastname} = req.body
         const newUser = await myClient.user.create({
             data: {
                 firstName,
                 lastName,
-                emailAddress
+                emailAddress,
+                lastname
             }
         })
     } catch (e) {
