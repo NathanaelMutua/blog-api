@@ -58,7 +58,7 @@ model User {
     firstName    String   @map("first_name")
     lastName     String   @map("last_name")
     emailAddress String   @unique @map("email_address")
-    username     String   @unique @map("username")
+    userName     String   @unique @map("username")
     createdAt    DateTime @default(now()) @map("user_created")
     updatedAt    DateTime @updatedAt @map("user_updated")
     isDeleted    Boolean  @default(false) @map("is_deleted")
@@ -172,16 +172,16 @@ To ensure that the data being entered is not null or empty.
 
 ```js
 export validateEnteredInfo = function(req, res, next) => {
-if (!first_name) {
+if (!firstName) {
   return res.status(404).json({ message: "First Name is Required!" });
 }
 
-if (!last_name) {
+if (!lastName) {
   return res.status(404).json({ message: "Last Name is Required!" });
 }
 
-if (!emailAddress) {
-  return res.status(404).json({ message: "Email Address is Required!" });
+if (!userName) {
+  return res.status(404).json({ message: "User Name is Required!" });
 }
 
 next();
@@ -193,13 +193,13 @@ The block to create a user, ```index.js```:
 ```js
 app.post("/users", validateEnteredInfo, async (req, res) => {
     try{
-        const {firstName, lastName, emailAddress, lastname} = req.body
+        const {firstName, lastName, emailAddress, userName} = req.body
         const newUser = await myClient.user.create({
             data: {
                 firstName,
                 lastName,
                 emailAddress,
-                lastname
+                userName
             }
         })
     } catch (e) {

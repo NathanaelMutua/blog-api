@@ -20,13 +20,13 @@ app.get("/", (_req, res) => {
 // POST /users(all users)
 app.post("/users", validateEnteredInfo, async (req, res) => {
     try{
-        const {firstName, lastName, emailAddress, username} = req.body;
+        const {firstName, lastName, emailAddress, userName} = req.body;
         const newUser = await myClient.user.create({
             data: {
                 firstName,
                 lastName,
                 emailAddress,
-                username
+                userName
             }
         })
         res.status(201).json({ message: "User Created Successfully", newUser })

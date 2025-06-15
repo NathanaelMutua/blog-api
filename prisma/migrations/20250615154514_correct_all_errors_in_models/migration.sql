@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "users" (
     "user_id" TEXT NOT NULL,
-    "first_name" INTEGER NOT NULL,
+    "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email_address" TEXT NOT NULL,
     "username" TEXT NOT NULL,
