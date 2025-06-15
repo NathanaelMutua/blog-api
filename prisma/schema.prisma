@@ -6,10 +6,36 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+	id           String   @id @default(uuid()) @map("user_id")
+	firstName    Int      @map("first_name")
+	lastName     String   @map("last_name")
+	emailAddress String    @unique @map("email_address")
+	username     String   @unique @map("username")
+	createdAt    DateTime @default(now()) @map("user_created")
+	updatedAt    DateTime @updatedAt @map("user_updated")
+	isDeleted    Boolean  @default(false) @map("is_deleted")
+	posts        Post[]
+  
+	@@map("users") // This will give our client access to the model using this alias
+}
+
+model Post {
+	id         String   @id @default(uuid()) @map("post_id")
+	title      String   @map("post_title")
+	content    String   @map("post_content")
+	userId     String
+	createdAt  DateTime @default(now()) @map("post_created")
+	latUpdated DateTime @updatedAt @map("post_updated")
+	isDeleted  Boolean  @default(false) @map("deleted")
+	user       User     @relation(fields: [userId],references: [id], onDelete: Cascade)
+
+	@@map("posts")
 }
