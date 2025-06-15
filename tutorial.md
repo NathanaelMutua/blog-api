@@ -88,3 +88,46 @@ We will now migrate our model to create the table in our database.
 ```bash
 npx prisma migrate dev --name "add user and post models"
 ```
+
+### 7. Package.json Configuration
+
+We will add a few scripts to streamline our development
+
+```json
+{
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "dev": "node --watch index.js",
+    "prod": "node index.js"
+  }
+}
+```
+
+### 8. Generate Prisma Client
+
+We will generate our client to allow us to communicate with our database.
+
+```bash
+npx prisma generate
+```
+
+## API implementation
+
+Create a JavaScript file, and let's dive in.
+
+### 1. Server Setup
+
+In ```index.js``` :
+
+```js
+import express from 'express';
+import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client/extension';
+
+dotenv.config({path: '.env'})
+
+const app = express();
+
+const myClient = new PrismaClient();
+```
