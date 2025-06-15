@@ -43,7 +43,7 @@ app.get("/users", async (_req, res) => {
       },
     });
     if (!allUsers) {
-      return res.status(400).json({ message: "Empty User's Table!" });
+      return res.status(404).json({ message: "Empty User's Table!" });
     }
     res
       .status(200)
@@ -55,6 +55,28 @@ app.get("/users", async (_req, res) => {
     console.log(e);
     res.status(500).json({ message: "Something Went Wrong!😓" });
   }
+});
+
+// GET /users/:id (get a specific user and all their related posts)
+app.get("/users/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const specificUser = await myClient.user.findFirst({
+            where: {
+                AND: {
+                    id,
+                    isDeleted: false
+                }
+            }, include: {
+                posts: true
+            }
+        });
+        res.status(200).json({ message: `User With id '${id}' Retrieved Successfully`, user: specificUser })
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Something Went Wrong!😓" });
+    }
 });
 
 // PORT configuration

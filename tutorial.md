@@ -270,3 +270,45 @@ Sample Output:
   ]
 }
 ```
+
+#### GET /users/:id
+
+This endpoint request should retrieve a user together with their related posts
+
+```js
+app.get("/user/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const specificUser = await myClient.user.findFirst({
+            where: {
+                isDeleted: false,
+                id
+            }, include: { posts: true }
+        });
+        res.status(200).json({ message: "User Retrieved Successfully", user: specificUser })
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Something Went Wrong!😓" });
+    }
+});
+```
+
+Sample Output:
+
+```json
+{
+    "message": "User With id '1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e' Retrieved Successfully",
+    "user": {
+        "id": "1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e",
+        "firstName": "Bruce",
+        "lastName": "Wayne",
+        "emailAddress": "brucewayne@gmail.com",
+        "userName": "brucewayne3256",
+        "createdAt": "2025-06-15T17:02:19.565Z",
+        "updatedAt": "2025-06-15T17:02:19.565Z",
+        "isDeleted": false,
+        "posts": []
+    }
+}
+```
