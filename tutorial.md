@@ -42,7 +42,7 @@ npm install @prisma/client
 In the `.env` file we will update the details as follows:
 
 ```sql
-DATABASE_URL="postgresql://postgres:YOURPASSWORD@localhost:5432/DATABASE_NAME"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/DATABASE_NAME"
 ```
 
 ![NOTE]
@@ -130,4 +130,33 @@ dotenv.config({path: '.env'})
 const app = express();
 
 const myClient = new PrismaClient();
+```
+
+### 2. Creating the main route
+
+This is what anyone will see when they first click the link. For now let's go with something simple.
+
+Note that we've placed an underscore before the 'res' to avoid unused variables.
+
+```js
+// Main route
+app.get("/", (_req, res) => {
+    res.send(
+        `<h1 style = "text-align: center;">Blog API</h1>`
+    );
+})
+```
+
+### 3. Port Configuration
+
+The setup below allows us to configure the port for deployment and local hosting.
+
+The first option ids going to come into play when we have deployed our database. However, at this stage we haven't, so it will switch to port 6000.
+
+```js
+const port = process.env.PORT || 8000;
+
+app.listen(port, () => {
+  console.log(`The App is listening on port ${port}`);
+})
 ```
