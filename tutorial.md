@@ -160,3 +160,49 @@ app.listen(port, () => {
   console.log(`The App is listening on port ${port}`);
 })
 ```
+
+### 4. CRUD endpoints
+
+#### POST /users
+
+We will create a separate JavaScript file for validations.
+
+To ensure that the data being entered is not null or empty.
+```./test/validations.js```:
+
+```js
+export validateEnteredInfo = function(req, res, next) => {
+if (!first_name) {
+  return res.status(404).json({ message: "First Name is Required!" });
+}
+
+if (!last_name) {
+  return res.status(404).json({ message: "Last Name is Required!" });
+}
+
+if (!emailAddress) {
+  return res.status(404).json({ message: "Email Address is Required!" });
+}
+
+next();
+}
+```
+
+The block to create a user, ```index.js```:
+
+```js
+app.post("/users", validateEnteredInfo, async (req, res) => {
+    try{
+        const {firstName, lastName, emailAddress} = req.body
+        const newUser = await myClient.user.create({
+            data: {
+                firstName,
+                lastName,
+                emailAddress
+            }
+        })
+    } catch (e) {
+        res.status(400).json({ message: "Something Went Wrong!😓" })
+    }
+});
+```
