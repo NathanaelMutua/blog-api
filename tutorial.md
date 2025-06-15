@@ -312,3 +312,57 @@ Sample Output:
     }
 }
 ```
+
+#### PATCH /users
+
+This will partially update a users details
+
+```js
+app.patch("/users/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { firstName, lastName} = req.body
+
+        const updatedUser = await myClient.user.update({
+            where: {
+                id
+            }, data: {
+                firstName,
+                lastName
+            }
+        });
+        res.status(200).json({ message: `User '${id}' Updated Successfully`, updatedUser})
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Something Went Wrong!😓" });
+    }
+});
+```
+
+Sample Input:
+
+```json
+{
+    "firstName": "Mary", 
+    "lastName": "Ann", 
+    "emailAddress": "maryanna562@gmail.com"
+}
+```
+
+Sample Output:
+
+```json
+{
+    "message": "User '1e1ba3cd-c02b-4af6-85c7-4609df7c5841' Updated Successfully",
+    "updatedUser": {
+        "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+        "firstName": "Mary",
+        "lastName": "Ann",
+        "emailAddress": "maryanna@gmail.com",
+        "userName": "mrsmaryanna34",
+        "createdAt": "2025-06-15T16:02:32.179Z",
+        "updatedAt": "2025-06-15T19:30:13.111Z",
+        "isDeleted": false
+    }
+}
+```

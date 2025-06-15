@@ -79,6 +79,27 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
+// PATCH /users/:id (partially update a user's details)
+app.patch("/users/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { firstName, lastName} = req.body
+
+        const updatedUser = await myClient.user.update({
+            where: {
+                id
+            }, data: {
+                firstName,
+                lastName
+            }
+        });
+        res.status(200).json({ message: `User '${id}' Updated Successfully`, updatedUser})
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Something Went Wrong!😓" });
+    }
+});
+
 // PORT configuration
 const port = process.env.PORT || 8000;
 
