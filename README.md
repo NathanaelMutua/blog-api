@@ -90,6 +90,35 @@ You can access it via this site or just follow this Postman link to implement it
 url/users
 ```
 
+Sample input:
+
+```json
+{
+    "firstName": "Maryann", 
+    "lastName": "Wanjiru", 
+    "emailAddress": "maryanna@gmail.com", 
+    "userName": "mrsmaryanna34"
+}
+```
+
+Expected output:
+
+```json
+{
+    "message": "User Created Successfully",
+    "newUser": {
+        "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+        "firstName": "Maryann",
+        "lastName": "Wanjiru",
+        "emailAddress": "maryanna@gmail.com",
+        "userName": "mrsmaryanna34",
+        "createdAt": "2025-06-15T16:02:32.179Z",
+        "updatedAt": "2025-06-15T16:02:32.179Z",
+        "isDeleted": false
+    }
+}
+```
+
 #### PUT /posts/:id
 
 This endpoint will update a specific post's details.
