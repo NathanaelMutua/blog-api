@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import { validateEnteredInfo } from './test/validations';
+import { validateEnteredInfo } from './run_test/validations.js';
 
 dotenv.config({path: '.env'}) // read environment variables
 const app = express(); // initialize Express

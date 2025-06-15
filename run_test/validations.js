@@ -1,9 +1,9 @@
 export function validateEnteredInfo(req, res, next) {
-	if (!first_name) {
+	if (!firstName) {
 		return res.status(404).json({ message: "First Name is Required!" });
 	}
 
-	if (!last_name) {
+	if (!lastName) {
 		return res.status(404).json({ message: "Last Name is Required!" });
 	}
 
