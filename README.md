@@ -47,27 +47,27 @@ This endpoint will create a new user.
 The request body content (in JSON format) is something like this:
 
 ```json
-    {
-        "firstName": "John",
-        "lastName": "Doe",
-        "email": "johndoe@gemail.com"
-    }
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@gemail.com"
+}
 ```
 
-You can access it via this site or just follow this Postman link to implement it: [POST /users](url)
+You can access it via this site or just follow this Postman link to implement it: [POST /users](https://nathanael-7604382.postman.co/workspace/Nathanael's-Workspace~5b4242d0-11c7-4277-809b-10ca424c98a5/example/45838328-bb5aa33b-3963-4b07-af51-1d7277f12fbc?action=share&creator=45838328&ctx=documentation)
 
 ```md
-url/users
+127.0.0.1:8000/users
 ```
 
 #### GET /posts
 
 This endpoint will retrieve all posts. It will also include the author's details for each post.
 
-You can access it via this site or just follow this Postman link to implement it: [GET /posts](url)
+You can access it via this site or just follow this Postman link to implement it: [GET /posts](https://nathanael-7604382.postman.co/workspace/Nathanael's-Workspace~5b4242d0-11c7-4277-809b-10ca424c98a5/request/45838328-c7f915bc-4a80-4bd7-85b3-62696cb06eed?action=share&creator=45838328&ctx=documentation)
 
 ```md
-url/users
+127.0.0.1:8000/users
 ```
 
 #### GET /posts/:id
@@ -84,20 +84,20 @@ url/users
 
 This endpoint will create a new post.
 
-You can access it via this site or just follow this Postman link to implement it: [POST /posts](url)
+You can access it via this site or just follow this Postman link to implement it: [POST /posts](https://nathanael-7604382.postman.co/workspace/Nathanael's-Workspace~5b4242d0-11c7-4277-809b-10ca424c98a5/request/45838328-27e1f1f2-f285-4be1-beb9-15bccc471f2e?action=share&creator=45838328&ctx=documentation)
 
 ```md
-url/users
+127.0.0.1:8000/users
 ```
 
 Sample input:
 
 ```json
 {
-    "firstName": "Maryann", 
-    "lastName": "Wanjiru", 
-    "emailAddress": "maryanna@gmail.com", 
-    "userName": "mrsmaryanna34"
+  "firstName": "Maryann",
+  "lastName": "Wanjiru",
+  "emailAddress": "maryanna@gmail.com",
+  "userName": "mrsmaryanna34"
 }
 ```
 
@@ -105,17 +105,17 @@ Expected output:
 
 ```json
 {
-    "message": "User Created Successfully",
-    "newUser": {
-        "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
-        "firstName": "Maryann",
-        "lastName": "Wanjiru",
-        "emailAddress": "maryanna@gmail.com",
-        "userName": "mrsmaryanna34",
-        "createdAt": "2025-06-15T16:02:32.179Z",
-        "updatedAt": "2025-06-15T16:02:32.179Z",
-        "isDeleted": false
-    }
+  "message": "User Created Successfully",
+  "newUser": {
+    "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+    "firstName": "Maryann",
+    "lastName": "Wanjiru",
+    "emailAddress": "maryanna@gmail.com",
+    "userName": "mrsmaryanna34",
+    "createdAt": "2025-06-15T16:02:32.179Z",
+    "updatedAt": "2025-06-15T16:02:32.179Z",
+    "isDeleted": false
+  }
 }
 ```
 

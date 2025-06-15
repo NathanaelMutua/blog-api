@@ -46,6 +46,7 @@ DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/DATABASE_NAME"
 ```
 
 ![NOTE]
+
 > We will revisit this environment variable to update it to the deployed database.
 
 ### 5. Prisma Schema
@@ -112,20 +113,22 @@ We will generate our client to allow us to communicate with our database.
 npx prisma generate
 ```
 
+---
+
 ## API implementation
 
 Create a JavaScript file, and let's dive in.
 
 ### 1. Server Setup
 
-In ```index.js``` :
+In `index.js` :
 
 ```js
-import express from 'express';
-import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client/extension';
+import express from "express";
+import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client/extension";
 
-dotenv.config({path: '.env'})
+dotenv.config({ path: ".env" });
 
 const app = express();
 
@@ -141,10 +144,8 @@ Note that we've placed an underscore before the 'res' to avoid unused variables.
 ```js
 // Main route
 app.get("/", (_req, res) => {
-    res.send(
-        `<h1 style = "text-align: center;">Blog API</h1>`
-    );
-})
+  res.send(`<h1 style = "text-align: center;">Blog API</h1>`);
+});
 ```
 
 ### 3. Port Configuration
@@ -158,7 +159,7 @@ const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
   console.log(`The App is listening on port ${port}`);
-})
+});
 ```
 
 ### 4. CRUD endpoints
@@ -168,7 +169,7 @@ app.listen(port, () => {
 We will create a separate JavaScript file for validations.
 
 To ensure that the data being entered is not null or empty.
-```./test/validations.js```:
+`./test/validations.js`:
 
 ```js
 export validateEnteredInfo = function(req, res, next) => {
@@ -188,22 +189,84 @@ next();
 }
 ```
 
-The block to create a user, ```index.js```:
+The block to create a user, `index.js`:
 
 ```js
 app.post("/users", validateEnteredInfo, async (req, res) => {
-    try{
-        const {firstName, lastName, emailAddress, userName} = req.body
-        const newUser = await myClient.user.create({
-            data: {
-                firstName,
-                lastName,
-                emailAddress,
-                userName
-            }
-        })
-    } catch (e) {
-        res.status(400).json({ message: "Something Went Wrong!😓" })
-    }
+  try {
+    const { firstName, lastName, emailAddress, userName } = req.body;
+    const newUser = await myClient.user.create({
+      data: {
+        firstName,
+        lastName,
+        emailAddress,
+        userName,
+      },
+    });
+  } catch (e) {
+    res.status(400).json({ message: "Something Went Wrong!😓" });
+  }
 });
+```
+
+#### GET /users
+
+This will be a request for all the users presently in the database.
+
+```js
+app.get("/users", (_req, res) => {
+  try {
+    const allUsers = myClient.user.findMany({
+      where: {
+        isDeleted: false,
+      },
+    });
+    res
+      .status(200)
+      .json({ message: "All Users Retrieved Successfully", allUsers });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something Went Wrong!😓" });
+  }
+});
+```
+
+Sample Output:
+
+```json
+{
+  "message": "All Users Retrieved Successfully",
+  "all_users": [
+    {
+      "id": "949b0cf0-cf4d-4041-b0ec-726a4ca72b8c",
+      "firstName": "Brandon",
+      "lastName": "Mwangi",
+      "emailAddress": "brandonmwangi@gmail.com",
+      "userName": "brandon45t",
+      "createdAt": "2025-06-15T15:47:14.945Z",
+      "updatedAt": "2025-06-15T15:47:14.945Z",
+      "isDeleted": false
+    },
+    {
+      "id": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+      "firstName": "Brian",
+      "lastName": "Mwangi",
+      "emailAddress": "brianonmwangi@gmail.com",
+      "userName": "rianon45t",
+      "createdAt": "2025-06-15T15:57:42.081Z",
+      "updatedAt": "2025-06-15T15:57:42.081Z",
+      "isDeleted": false
+    },
+    {
+      "id": "cea834f7-1fd9-4375-a9f4-fda94a790f16",
+      "firstName": "Mitchells",
+      "lastName": "Chepkirui",
+      "emailAddress": "mitchellechepkirui@gmail.com",
+      "userName": "mitchychepch362",
+      "createdAt": "2025-06-15T15:57:42.081Z",
+      "updatedAt": "2025-06-15T15:57:42.081Z",
+      "isDeleted": false
+    } // ...
+  ]
+}
 ```
