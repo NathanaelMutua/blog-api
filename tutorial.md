@@ -484,6 +484,29 @@ Sample Output:
 
 This block will get all posts with user details, specifically the user first name and their email.
 
+```js
+app.get("/posts", async (req, res) => {
+  try {
+    const allPosts = await myClient.post.findMany({
+      where: {
+        isDeleted: false
+      }, include: {
+        user: {
+          select: {
+            firstName: true,
+            emailAddress: true // this will prevent too much data, displaying only the name and email
+          }
+        }
+      }
+    });
+    res.status(200).json({ message: "All Posts Retrieved Successfully", all_posts: allPosts })
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" })
+  }
+});
+```
+
 ```json
 {
   "message": "All Posts Retrieved Successfully",
@@ -515,5 +538,58 @@ This block will get all posts with user details, specifically the user first nam
           }
       } // ...
   ]
+}
+```
+
+### GET /posts/:id (Retireving a specific user)
+
+This block will make a request for a specific post calling its Id by retrieving it from the URL parameters.
+
+```js
+app.get("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const specificPost = await myClient.post.findFirst({
+      where: {
+        id,
+        isDeleted: false
+      }, include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            emailAddress: true
+          }
+        }
+      }
+    });
+    res.status(200).json({ message: `Retrieved Post '${id}' Successfully!`, retrieved_post: specificPost });
+  } catch (e) {
+    console.log(e);
+    res.status.apply(400).json({ message: "Something Went Wrong!😓" });
+  }
+});
+```
+
+Sample output:
+
+```json
+{
+    "message": "Retrieved Post '6e9b66de-36b1-4a38-97b6-aee88ffa3949' Successfully!",
+    "retrieved_post": {
+        "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
+        "title": "Visiting The Zoo",
+        "content": "Wonderful time at the zoo 😊!",
+        "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+        "createdAt": "2025-06-16T07:25:34.637Z",
+        "latUpdated": "2025-06-16T07:25:34.637Z",
+        "isDeleted": false,
+        "user": {
+            "firstName": "Brian",
+            "lastName": "Mwangi",
+            "emailAddress": "brianonmwangi@gmail.com"
+        }
+    }
 }
 ```

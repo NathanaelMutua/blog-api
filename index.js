@@ -149,7 +149,7 @@ app.get("/posts", async (req, res) => {
         user: {
           select: {
             firstName: true,
-            emailAddress: true
+            emailAddress: true // this will prevent too much data, displaying only the name and email
           }
         }
       }
@@ -158,6 +158,32 @@ app.get("/posts", async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(400).json({ message: "Something Went Wrong!😓" })
+  }
+});
+
+// GET /posts/:id (Retrieving a specific post)
+app.get("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const specificPost = await myClient.post.findFirst({
+      where: {
+        id,
+        isDeleted: false
+      }, include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            emailAddress: true
+          }
+        }
+      }
+    });
+    res.status(200).json({ message: `Retrieved Post '${id}' Successfully!`, retrieved_post: specificPost });
+  } catch (e) {
+    console.log(e);
+    res.status.apply(400).json({ message: "Something Went Wrong!😓" });
   }
 });
 
