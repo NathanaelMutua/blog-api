@@ -322,7 +322,7 @@ Sample Input:
 }
 ```
 
-Sample Output: 
+Sample Output:
 
 ```json
 {

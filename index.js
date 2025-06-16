@@ -36,7 +36,7 @@ app.post("/users", validateUserEnteredInfo, async (req, res) => {
     });
     res.status(201).json({ message: "User Created Successfully", newUser });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -57,7 +57,7 @@ app.get("/users", async (_req, res) => {
       all_users: allUsers,
     });
   } catch (e) {
-    console.log(e);
+    
     res.status(500).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -85,7 +85,7 @@ app.get("/users/:id", validateExistingUserRecord, async (req, res) => {
         user: specificUser,
       });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -109,7 +109,7 @@ app.patch("/users/:id", validateExistingUserRecord, async (req, res) => {
       .status(200)
       .json({ message: `User '${id}' Updated Successfully`, updatedUser });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -131,7 +131,7 @@ app.delete("/users/:id", validateExistingUserRecord, validateIfUserDeleted, asyn
       .status(200)
       .json({ message: `User '${id}' Deleted Successfully`, deletedUser });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -148,7 +148,6 @@ app.post("/posts", validatePostEnteredInfo, async (req, res) => {
         userId,
       },
     });
-    console.log("create post");
     res
       .status(201)
       .json({
@@ -156,7 +155,7 @@ app.post("/posts", validatePostEnteredInfo, async (req, res) => {
         newPost,
       });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -184,7 +183,7 @@ app.get("/posts", async (req, res) => {
         all_posts: allPosts,
       });
   } catch (e) {
-    console.log(e);
+    
     res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -216,7 +215,7 @@ app.get("/posts/:id", validateExistingPostRecord, async (req, res) => {
         retrieved_post: specificPost,
       });
   } catch (e) {
-    console.log(e);
+    
     res.status.apply(400).json({ message: "Something Went Wrong!😓" });
   }
 });
@@ -249,7 +248,7 @@ app.put(
           updated_post: updatedPost,
         });
     } catch (e) {
-      console.log(e);
+      
       res.status(500).json({ message: "Something Went Wrong!😓" });
     }
   },
@@ -279,7 +278,7 @@ app.delete(
           deleted_post: deletedPost,
         });
     } catch (e) {
-      console.log(e);
+      
       res.status(500).json({ message: "Something Went Wrong!😓" });
     }
   },
