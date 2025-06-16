@@ -162,7 +162,7 @@ app.post("/posts", validatePostEnteredInfo, async (req, res) => {
 });
 
 // GET /posts (To retrieve all posts, including author details)
-app.get("/posts", validateExistingPostRecord, async (req, res) => {
+app.get("/posts", async (req, res) => {
   try {
     const allPosts = await myClient.post.findMany({
       where: {
