@@ -39,6 +39,23 @@ export const validateExistingUserRecord = function (req, res, next) {
   next();
 };
 
+export const validateIfUserDeleted = async function (req, res, next) {
+  const { id } = req.params;
+
+  const userToBeDeleted = await myClient.user.findFirst({
+    where: {
+      id,
+      isDeleted: true,
+    },
+  });
+
+  if (userToBeDeleted) {
+    return res.status(400).json({ message: `User '${id}' Already Deleted!` });
+  }
+
+  next();
+};
+
 export const validatePostEnteredInfo = function (req, res, next) {
   const { title, content, userId } = req.body;
 

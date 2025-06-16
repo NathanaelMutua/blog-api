@@ -7,6 +7,7 @@ import {
   validatePostEnteredInfo,
   validateIfPostDeleted,
   validateExistingPostRecord,
+  validateIfUserDeleted
 } from "./controllers/validations.controller.js";
 
 dotenv.config({ path: ".env" }); // read environment variables
@@ -114,13 +115,13 @@ app.patch("/users/:id", validateExistingUserRecord, async (req, res) => {
 });
 
 // DELETE /users/:id (soft-delete a specific user)
-app.delete("/users/:id", validateExistingUserRecord, async (req, res) => {
+app.delete("/users/:id", validateExistingUserRecord, validateIfUserDeleted, async (req, res) => {
   try {
     const { id } = req.params;
 
     const deletedUser = await myClient.user.update({
       where: {
-        id,
+        id
       },
       data: {
         isDeleted: true, // performs a soft-delete
