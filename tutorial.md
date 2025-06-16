@@ -169,7 +169,7 @@ app.listen(port, () => {
 We will create a separate JavaScript file for validations.
 
 To ensure that the data being entered is not null or empty.
-`./test/validations.js`:
+`./controllers/validations.js`:
 
 ```js
 export validateEnteredInfo = function(req, res, next) => {
@@ -277,20 +277,23 @@ This endpoint request should retrieve a user together with their related posts
 
 ```js
 app.get("/user/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const specificUser = await myClient.user.findFirst({
-            where: {
-                isDeleted: false,
-                id
-            }, include: { posts: true }
-        });
-        res.status(200).json({ message: "User Retrieved Successfully", user: specificUser })
-    } catch (e) {
-        console.log(e);
-        res.status(400).json({ message: "Something Went Wrong!😓" });
-    }
+    const specificUser = await myClient.user.findFirst({
+      where: {
+        isDeleted: false,
+        id,
+      },
+      include: { posts: true },
+    });
+    res
+      .status(200)
+      .json({ message: "User Retrieved Successfully", user: specificUser });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" });
+  }
 });
 ```
 
@@ -298,18 +301,18 @@ Sample Output:
 
 ```json
 {
-    "message": "User With id '1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e' Retrieved Successfully",
-    "user": {
-        "id": "1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e",
-        "firstName": "Bruce",
-        "lastName": "Wayne",
-        "emailAddress": "brucewayne@gmail.com",
-        "userName": "brucewayne3256",
-        "createdAt": "2025-06-15T17:02:19.565Z",
-        "updatedAt": "2025-06-15T17:02:19.565Z",
-        "isDeleted": false,
-        "posts": []
-    }
+  "message": "User With id '1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e' Retrieved Successfully",
+  "user": {
+    "id": "1bfbfcf3-d85a-4835-a9e7-40d94a6e6e3e",
+    "firstName": "Bruce",
+    "lastName": "Wayne",
+    "emailAddress": "brucewayne@gmail.com",
+    "userName": "brucewayne3256",
+    "createdAt": "2025-06-15T17:02:19.565Z",
+    "updatedAt": "2025-06-15T17:02:19.565Z",
+    "isDeleted": false,
+    "posts": []
+  }
 }
 ```
 
@@ -319,23 +322,26 @@ This will partially update a users details
 
 ```js
 app.patch("/users/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { firstName, lastName} = req.body
+  try {
+    const { id } = req.params;
+    const { firstName, lastName } = req.body;
 
-        const updatedUser = await myClient.user.update({
-            where: {
-                id
-            }, data: {
-                firstName,
-                lastName
-            }
-        });
-        res.status(200).json({ message: `User '${id}' Updated Successfully`, updatedUser})
-    } catch (e) {
-        console.log(e);
-        res.status(400).json({ message: "Something Went Wrong!😓" });
-    }
+    const updatedUser = await myClient.user.update({
+      where: {
+        id,
+      },
+      data: {
+        firstName,
+        lastName,
+      },
+    });
+    res
+      .status(200)
+      .json({ message: `User '${id}' Updated Successfully`, updatedUser });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" });
+  }
 });
 ```
 
@@ -343,9 +349,9 @@ Sample Input(body request):
 
 ```json
 {
-    "firstName": "Mary", 
-    "lastName": "Ann", 
-    "emailAddress": "maryanna562@gmail.com"
+  "firstName": "Mary",
+  "lastName": "Ann",
+  "emailAddress": "maryanna562@gmail.com"
 }
 ```
 
@@ -353,17 +359,17 @@ Sample Output:
 
 ```json
 {
-    "message": "User '1e1ba3cd-c02b-4af6-85c7-4609df7c5841' Updated Successfully",
-    "updatedUser": {
-        "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
-        "firstName": "Mary",
-        "lastName": "Ann",
-        "emailAddress": "maryanna@gmail.com",
-        "userName": "mrsmaryanna34",
-        "createdAt": "2025-06-15T16:02:32.179Z",
-        "updatedAt": "2025-06-15T19:30:13.111Z",
-        "isDeleted": false
-    }
+  "message": "User '1e1ba3cd-c02b-4af6-85c7-4609df7c5841' Updated Successfully",
+  "updatedUser": {
+    "id": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+    "firstName": "Mary",
+    "lastName": "Ann",
+    "emailAddress": "maryanna@gmail.com",
+    "userName": "mrsmaryanna34",
+    "createdAt": "2025-06-15T16:02:32.179Z",
+    "updatedAt": "2025-06-15T19:30:13.111Z",
+    "isDeleted": false
+  }
 }
 ```
 
@@ -374,12 +380,12 @@ We will add record validation, to check if the record exists. Reason being, I ha
 In the `validations.js`:
 
 ```js
-export const validateExistingRecord = function(req, res, next) {
-  const {id} = req.params;
+export const validateExistingRecord = function (req, res, next) {
+  const { id } = req.params;
   const existingUser = myClient.user.findUnique({
     where: {
-      id
-    }
+      id,
+    },
   });
 
   if (!existingUser) {
@@ -403,7 +409,7 @@ export const myClient = new PrismaClient();
 In `validations.js`:
 
 ```js
-import {myClient} from '../index.js'
+import { myClient } from "../index.js";
 ```
 
 Take note of the directory, particularly for me, I hadn't saved it in the same directory.
@@ -415,7 +421,7 @@ We will add a middleware to validate that none of the data entered for the posts
 In `validations.js`:
 
 ```js
-export const validatePostEnteredInfo = function(req, res, next) {
+export const validatePostEnteredInfo = function (req, res, next) {
   const { title, content, userId } = req.body;
 
   if (!title) {
@@ -427,13 +433,13 @@ export const validatePostEnteredInfo = function(req, res, next) {
   if (!userId) {
     return res.status(404).json({ message: "User ID is Required!" });
   }
-}
+};
 ```
 
 Then now we can have our post block to create a post in the `index.js` file:
 
 ```js
-app.post("/posts",validatePostEnteredInfo, async (req, res) => {
+app.post("/posts", validatePostEnteredInfo, async (req, res) => {
   try {
     const { title, content, userId } = req.body;
 
@@ -441,14 +447,19 @@ app.post("/posts",validatePostEnteredInfo, async (req, res) => {
       data: {
         title,
         content,
-        userId
-      }
+        userId,
+      },
     });
-    console.log("create post")
-    res.status(201).json({ message: `Post for user '${userId}' Created Successfully`, newPost });
+    console.log("create post");
+    res
+      .status(201)
+      .json({
+        message: `Post for user '${userId}' Created Successfully`,
+        newPost,
+      });
   } catch (e) {
     console.log(e);
-    res.status(400).json({ message: "Something Went Wrong!😓" })
+    res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
 ```
@@ -457,9 +468,9 @@ Sample input(body request):
 
 ```json
 {
-    "title": "Bought a new car",
-    "content": "Guess the model 😊?",
-    "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16"
+  "title": "Bought a new car",
+  "content": "Guess the model 😊?",
+  "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16"
 }
 ```
 
@@ -467,16 +478,16 @@ Sample Output:
 
 ```json
 {
-    "message": "Post for user 'cea834f7-1fd9-4375-a9f4-fda94a790f16' Created Successfully",
-    "newPost": {
-        "id": "2ceaa0d7-e60d-401b-9c6a-16c7fa9aaeef",
-        "title": "Bought a new car",
-        "content": "Guess the model 😊?",
-        "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16",
-        "createdAt": "2025-06-16T07:40:49.323Z",
-        "latUpdated": "2025-06-16T07:40:49.323Z",
-        "isDeleted": false
-    }
+  "message": "Post for user 'cea834f7-1fd9-4375-a9f4-fda94a790f16' Created Successfully",
+  "newPost": {
+    "id": "2ceaa0d7-e60d-401b-9c6a-16c7fa9aaeef",
+    "title": "Bought a new car",
+    "content": "Guess the model 😊?",
+    "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16",
+    "createdAt": "2025-06-16T07:40:49.323Z",
+    "latUpdated": "2025-06-16T07:40:49.323Z",
+    "isDeleted": false
+  }
 }
 ```
 
@@ -489,20 +500,26 @@ app.get("/posts", async (req, res) => {
   try {
     const allPosts = await myClient.post.findMany({
       where: {
-        isDeleted: false
-      }, include: {
+        isDeleted: false,
+      },
+      include: {
         user: {
           select: {
             firstName: true,
-            emailAddress: true // this will prevent too much data, displaying only the name and email
-          }
-        }
-      }
+            emailAddress: true, // this will prevent too much data, displaying only the name and email
+          },
+        },
+      },
     });
-    res.status(200).json({ message: "All Posts Retrieved Successfully", all_posts: allPosts })
+    res
+      .status(200)
+      .json({
+        message: "All Posts Retrieved Successfully",
+        all_posts: allPosts,
+      });
   } catch (e) {
     console.log(e);
-    res.status(400).json({ message: "Something Went Wrong!😓" })
+    res.status(400).json({ message: "Something Went Wrong!😓" });
   }
 });
 ```
@@ -511,32 +528,32 @@ app.get("/posts", async (req, res) => {
 {
   "message": "All Posts Retrieved Successfully",
   "all_posts": [
-      {
-          "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
-          "title": "Visiting The Zoo",
-          "content": "Wonderful time at the zoo 😊!",
-          "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
-          "createdAt": "2025-06-16T07:25:34.637Z",
-          "latUpdated": "2025-06-16T07:25:34.637Z",
-          "isDeleted": false,
-          "user": {
-              "firstName": "Brian",
-              "emailAddress": "brianonmwangi@gmail.com"
-          }
-      },
-      {
-          "id": "03d9c6b5-25b8-47d4-a959-44ffb1e3aad3",
-          "title": "Visiting The Mall",
-          "content": "Wonderful time at the mall 😊!",
-          "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
-          "createdAt": "2025-06-16T07:25:34.637Z",
-          "latUpdated": "2025-06-16T07:25:34.637Z",
-          "isDeleted": false,
-          "user": {
-              "firstName": "Brian",
-              "emailAddress": "brianonmwangi@gmail.com"
-          }
-      } // ...
+    {
+      "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
+      "title": "Visiting The Zoo",
+      "content": "Wonderful time at the zoo 😊!",
+      "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+      "createdAt": "2025-06-16T07:25:34.637Z",
+      "latUpdated": "2025-06-16T07:25:34.637Z",
+      "isDeleted": false,
+      "user": {
+        "firstName": "Brian",
+        "emailAddress": "brianonmwangi@gmail.com"
+      }
+    },
+    {
+      "id": "03d9c6b5-25b8-47d4-a959-44ffb1e3aad3",
+      "title": "Visiting The Mall",
+      "content": "Wonderful time at the mall 😊!",
+      "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+      "createdAt": "2025-06-16T07:25:34.637Z",
+      "latUpdated": "2025-06-16T07:25:34.637Z",
+      "isDeleted": false,
+      "user": {
+        "firstName": "Brian",
+        "emailAddress": "brianonmwangi@gmail.com"
+      }
+    } // ...
   ]
 }
 ```
@@ -553,18 +570,24 @@ app.get("/posts/:id", async (req, res) => {
     const specificPost = await myClient.post.findFirst({
       where: {
         id,
-        isDeleted: false
-      }, include: {
+        isDeleted: false,
+      },
+      include: {
         user: {
           select: {
             firstName: true,
             lastName: true,
-            emailAddress: true
-          }
-        }
-      }
+            emailAddress: true,
+          },
+        },
+      },
     });
-    res.status(200).json({ message: `Retrieved Post '${id}' Successfully!`, retrieved_post: specificPost });
+    res
+      .status(200)
+      .json({
+        message: `Retrieved Post '${id}' Successfully!`,
+        retrieved_post: specificPost,
+      });
   } catch (e) {
     console.log(e);
     res.status.apply(400).json({ message: "Something Went Wrong!😓" });
@@ -576,21 +599,21 @@ Sample output:
 
 ```json
 {
-    "message": "Retrieved Post '6e9b66de-36b1-4a38-97b6-aee88ffa3949' Successfully!",
-    "retrieved_post": {
-        "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
-        "title": "Visiting The Zoo",
-        "content": "Wonderful time at the zoo 😊!",
-        "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
-        "createdAt": "2025-06-16T07:25:34.637Z",
-        "latUpdated": "2025-06-16T07:25:34.637Z",
-        "isDeleted": false,
-        "user": {
-            "firstName": "Brian",
-            "lastName": "Mwangi",
-            "emailAddress": "brianonmwangi@gmail.com"
-        }
+  "message": "Retrieved Post '6e9b66de-36b1-4a38-97b6-aee88ffa3949' Successfully!",
+  "retrieved_post": {
+    "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
+    "title": "Visiting The Zoo",
+    "content": "Wonderful time at the zoo 😊!",
+    "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+    "createdAt": "2025-06-16T07:25:34.637Z",
+    "latUpdated": "2025-06-16T07:25:34.637Z",
+    "isDeleted": false,
+    "user": {
+      "firstName": "Brian",
+      "lastName": "Mwangi",
+      "emailAddress": "brianonmwangi@gmail.com"
     }
+  }
 }
 ```
 
@@ -599,7 +622,7 @@ Sample output:
 The code in `index.js`:
 
 ```js
-app.put("/posts/:id",validatePostEnteredInfo, async (req, res) => {
+app.put("/posts/:id", validatePostEnteredInfo, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -607,14 +630,20 @@ app.put("/posts/:id",validatePostEnteredInfo, async (req, res) => {
 
     const updatedPost = await myClient.post.update({
       where: {
-        id
-      }, data: {
+        id,
+      },
+      data: {
         title,
         content,
-        userId
-      }
+        userId,
+      },
     });
-    res.status(200).json({ message: "Post Updated Successfully", updated_post: updatedPost });
+    res
+      .status(200)
+      .json({
+        message: "Post Updated Successfully",
+        updated_post: updatedPost,
+      });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Something Went Wrong!😓" });
@@ -626,9 +655,9 @@ Sample Input:
 
 ```json
 {
-    "title": "Bought a new dress😍",
-    "content": "I can't believe my eyes 😊? #YOLO",
-    "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841"
+  "title": "Bought a new dress😍",
+  "content": "I can't believe my eyes 😊? #YOLO",
+  "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841"
 }
 ```
 
@@ -636,16 +665,16 @@ Sample output:
 
 ```json
 {
-    "message": "Post Updated Successfully",
-    "updated_post": {
-        "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
-        "title": "Bought a new dress😍",
-        "content": "I can't believe my eyes 😊? #YOLO",
-        "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
-        "createdAt": "2025-06-16T11:13:06.651Z",
-        "latUpdated": "2025-06-16T14:24:55.680Z",
-        "isDeleted": false
-    }
+  "message": "Post Updated Successfully",
+  "updated_post": {
+    "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
+    "title": "Bought a new dress😍",
+    "content": "I can't believe my eyes 😊? #YOLO",
+    "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+    "createdAt": "2025-06-16T11:13:06.651Z",
+    "latUpdated": "2025-06-16T14:24:55.680Z",
+    "isDeleted": false
+  }
 }
 ```
 
@@ -659,15 +688,21 @@ The code in `index.js`:
 app.delete("/posts/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const deletedPost = await myClient.post.update({
       where: {
-        id
-      }, data: {
-        isDeleted: true
-      }
+        id,
+      },
+      data: {
+        isDeleted: true,
+      },
     });
-    res.status(200).json({ message: `Post '${id}' Deleted Successfully!`, deleted_post: deletedPost });
+    res
+      .status(200)
+      .json({
+        message: `Post '${id}' Deleted Successfully!`,
+        deleted_post: deletedPost,
+      });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Something Went Wrong!😓" });
@@ -685,16 +720,16 @@ Sample Output:
 
 ```json
 {
-    "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Deleted Successfully!",
-    "deleted_post": {
-        "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
-        "title": "Bought a new dress😍",
-        "content": "I can't believe my eyes 😊? #YOLO",
-        "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
-        "createdAt": "2025-06-16T11:13:06.651Z",
-        "latUpdated": "2025-06-16T14:41:30.110Z",
-        "isDeleted": true
-    }
+  "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Deleted Successfully!",
+  "deleted_post": {
+    "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
+    "title": "Bought a new dress😍",
+    "content": "I can't believe my eyes 😊? #YOLO",
+    "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+    "createdAt": "2025-06-16T11:13:06.651Z",
+    "latUpdated": "2025-06-16T14:41:30.110Z",
+    "isDeleted": true
+  }
 }
 ```
 
@@ -702,6 +737,6 @@ Sample Output on repeated entry:
 
 ```json
 {
-    "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Already Deleted!"
+  "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Already Deleted!"
 }
 ```

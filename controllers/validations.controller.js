@@ -1,4 +1,4 @@
-import { myClient } from '../index.js'
+import { myClient } from "../index.js";
 
 export const validateUserEnteredInfo = function (req, res, next) {
   const { firstName, lastName, emailAddress, userName } = req.body;
@@ -22,23 +22,24 @@ export const validateUserEnteredInfo = function (req, res, next) {
   next();
 };
 
-export const validateExistingRecord = function(req, res, next) {
-	const {id} = req.params;
-	const existingUser = myClient.user.findUnique({
-		where: {
-			id
-		}
-	});
+export const validateExistingUserRecord = function (req, res, next) {
+  const { id } = req.params;
+  const existingUser = myClient.user.findUnique({
+    where: {
+      id,
+    },
+  });
 
-	if (!existingUser) {
-		return res.status(404).json({ message: "Record Not Found!" });
-	}
+  if (!existingUser) {
+    return res
+      .status(404)
+      .json({ message: `User '${id}' Not Found! Check Again!` });
+  }
 
-	next();
+  next();
 };
 
-
-export const validatePostEnteredInfo = function(req, res, next) {
+export const validatePostEnteredInfo = function (req, res, next) {
   const { title, content, userId } = req.body;
 
   if (!title) {
@@ -54,20 +55,39 @@ export const validatePostEnteredInfo = function(req, res, next) {
   }
 
   next();
-}
+};
 
-export const validateIfDeleted = async function (req, res, next) {
+export const validateExistingPostRecord = async function (req, res, next) {
+  const { id } = req.params;
+
+  const postToBeChecked = await myClient.post.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!postToBeChecked) {
+    return res
+      .status(400)
+      .json({ message: `Post '${id}' Is Not Found! Check Again!` });
+  }
+
+  next();
+};
+
+export const validateIfPostDeleted = async function (req, res, next) {
   const { id } = req.params;
 
   const postToBeDeleted = await myClient.post.findFirst({
     where: {
       id,
-      isDeleted: true
-    }
+      isDeleted: true,
+    },
   });
+
   if (postToBeDeleted) {
-    return res.status(400).json({ message: `Post '${id}' Already Deleted!`})
+    return res.status(400).json({ message: `Post '${id}' Already Deleted!` });
   }
 
   next();
-}
+};
