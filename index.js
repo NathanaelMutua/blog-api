@@ -139,14 +139,27 @@ app.post("/posts",validatePostEnteredInfo, async (req, res) => {
   }
 });
 
-// // GET /posts (To retrieve all posts, including author details)
-// app.get("/posts", async (req, res) => {
-//   try {
-
-//   } catch (e) {
-
-//   }
-// });
+// GET /posts (To retrieve all posts, including author details)
+app.get("/posts", async (req, res) => {
+  try {
+    const allPosts = await myClient.post.findMany({
+      where: {
+        isDeleted: false
+      }, include: {
+        user: {
+          select: {
+            firstName: true,
+            emailAddress: true
+          }
+        }
+      }
+    });
+    res.status(200).json({ message: "All Posts Retrieved Successfully", all_posts: allPosts })
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" })
+  }
+});
 
 // PORT configuration
 const port = process.env.PORT || 8000;

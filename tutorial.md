@@ -164,7 +164,7 @@ app.listen(port, () => {
 
 ### 4. CRUD endpoints
 
-#### POST /users
+#### POST /users (Creates a user record)
 
 We will create a separate JavaScript file for validations.
 
@@ -209,7 +209,7 @@ app.post("/users", validateEnteredInfo, async (req, res) => {
 });
 ```
 
-#### GET /users
+#### GET /users (Retrieve all users)
 
 This will be a request for all the users presently in the database.
 
@@ -271,7 +271,7 @@ Sample Output:
 }
 ```
 
-#### GET /users/:id
+#### GET /users/:id (Retrieve a specific user)
 
 This endpoint request should retrieve a user together with their related posts
 
@@ -313,7 +313,7 @@ Sample Output:
 }
 ```
 
-#### PATCH /users
+#### PATCH /users (update user details)
 
 This will partially update a users details
 
@@ -367,7 +367,7 @@ Sample Output:
 }
 ```
 
-#### DELETE /users/:id
+#### DELETE /users/:id (deleting a specific user record)
 
 We will add record validation, to check if the record exists. Reason being, I have been running into my catch block without understanding why, so this is a solution.
 
@@ -408,7 +408,7 @@ import {myClient} from '../index.js'
 
 Take note of the directory, particularly for me, I hadn't saved it in the same directory.
 
-#### POST /posts (creating a post)
+#### POST /posts (Creating a post)
 
 We will add a middleware to validate that none of the data entered for the posts is empty.
 
@@ -477,5 +477,43 @@ Sample Output:
         "latUpdated": "2025-06-16T07:40:49.323Z",
         "isDeleted": false
     }
+}
+```
+
+#### GET /posts (Retrieving all posts)
+
+This block will get all posts with user details, specifically the user first name and their email.
+
+```json
+{
+  "message": "All Posts Retrieved Successfully",
+  "all_posts": [
+      {
+          "id": "6e9b66de-36b1-4a38-97b6-aee88ffa3949",
+          "title": "Visiting The Zoo",
+          "content": "Wonderful time at the zoo 😊!",
+          "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+          "createdAt": "2025-06-16T07:25:34.637Z",
+          "latUpdated": "2025-06-16T07:25:34.637Z",
+          "isDeleted": false,
+          "user": {
+              "firstName": "Brian",
+              "emailAddress": "brianonmwangi@gmail.com"
+          }
+      },
+      {
+          "id": "03d9c6b5-25b8-47d4-a959-44ffb1e3aad3",
+          "title": "Visiting The Mall",
+          "content": "Wonderful time at the mall 😊!",
+          "userId": "aa97dd1d-8733-4a43-ab0d-e0a5cba5db7c",
+          "createdAt": "2025-06-16T07:25:34.637Z",
+          "latUpdated": "2025-06-16T07:25:34.637Z",
+          "isDeleted": false,
+          "user": {
+              "firstName": "Brian",
+              "emailAddress": "brianonmwangi@gmail.com"
+          }
+      } // ...
+  ]
 }
 ```
