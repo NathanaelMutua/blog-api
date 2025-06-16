@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { validateEnteredInfo, validateExistingRecord } from "./run_test/validations.js";
+import { validateUserEnteredInfo, validateExistingRecord, validatePostEnteredInfo } from "./run_test/validations.js";
 
 dotenv.config({ path: ".env" }); // read environment variables
 const app = express(); // initialize Express
@@ -16,7 +16,7 @@ app.get("/", (_req, res) => {
 });
 
 // POST /users(all users)
-app.post("/users", validateEnteredInfo, async (req, res) => {
+app.post("/users", validateUserEnteredInfo, async (req, res) => {
   try {
     const { firstName, lastName, emailAddress, userName } = req.body;
     const newUser = await myClient.user.create({
@@ -117,6 +117,26 @@ app.delete("/users/:id",validateExistingRecord, async (req, res) => {
         console.log(e);
         res.status(400).json({ message: "Something Went Wrong!😓" });
     }
+});
+
+// POST /posts (Creating a new post)
+app.post("/posts",validatePostEnteredInfo, async (req, res) => {
+  try {
+    const { title, content, userId } = req.body;
+
+    const newPost = await myClient.post.create({
+      data: {
+        title,
+        content,
+        userId
+      }
+    });
+    console.log("create post")
+    res.status(201).json({ message: `Post for user '${userId}' Created Successfully`, newPost });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" })
+  }
 });
 
 // PORT configuration

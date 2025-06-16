@@ -1,6 +1,6 @@
 import { myClient } from '../index.js'
 
-export const validateEnteredInfo = function (req, res, next) {
+export const validateUserEnteredInfo = function (req, res, next) {
   const { firstName, lastName, emailAddress, userName } = req.body;
 
   if (!firstName) {
@@ -36,3 +36,20 @@ export const validateExistingRecord = function(req, res, next) {
 
 	next();
 };
+
+
+export const validatePostEnteredInfo = function(req, res, next) {
+  const { title, content, userId } = req.body;
+
+  if (!title) {
+    return res.status(404).json({ message: "Title is Required!" });
+  }
+
+  if (!content) {
+    return res.status(404).json({ message: "Content is Required!" });
+  }
+
+  if (!userId) {
+    return res.status(404).json({ message: "User ID is Required!" });
+  }
+}

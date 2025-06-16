@@ -339,7 +339,7 @@ app.patch("/users/:id", async (req, res) => {
 });
 ```
 
-Sample Input:
+Sample Input(body request):
 
 ```json
 {
@@ -407,3 +407,75 @@ import {myClient} from '../index.js'
 ```
 
 Take note of the directory, particularly for me, I hadn't saved it in the same directory.
+
+#### POST /posts (creating a post)
+
+We will add a middleware to validate that none of the data entered for the posts is empty.
+
+In `validations.js`:
+
+```js
+export const validatePostEnteredInfo = function(req, res, next) {
+  const { title, content, userId } = req.body;
+
+  if (!title) {
+    return res.status(404).json({ message: "Title is Required!" });
+  }
+  if (!content) {
+    return res.status(404).json({ message: "Content is Required!" });
+  }
+  if (!userId) {
+    return res.status(404).json({ message: "User ID is Required!" });
+  }
+}
+```
+
+Then now we can have our post block to create a post in the `index.js` file:
+
+```js
+app.post("/posts",validatePostEnteredInfo, async (req, res) => {
+  try {
+    const { title, content, userId } = req.body;
+
+    const newPost = await myClient.post.create({
+      data: {
+        title,
+        content,
+        userId
+      }
+    });
+    console.log("create post")
+    res.status(201).json({ message: `Post for user '${userId}' Created Successfully`, newPost });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ message: "Something Went Wrong!😓" })
+  }
+});
+```
+
+Sample input(body request):
+
+```json
+{
+    "title": "Bought a new car",
+    "content": "Guess the model 😊?",
+    "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16"
+}
+```
+
+Sample Output:
+
+```json
+{
+    "message": "Post for user 'cea834f7-1fd9-4375-a9f4-fda94a790f16' Created Successfully",
+    "newPost": {
+        "id": "2ceaa0d7-e60d-401b-9c6a-16c7fa9aaeef",
+        "title": "Bought a new car",
+        "content": "Guess the model 😊?",
+        "userId": "cea834f7-1fd9-4375-a9f4-fda94a790f16",
+        "createdAt": "2025-06-16T07:40:49.323Z",
+        "latUpdated": "2025-06-16T07:40:49.323Z",
+        "isDeleted": false
+    }
+}
+```
