@@ -139,6 +139,15 @@ app.post("/posts",validatePostEnteredInfo, async (req, res) => {
   }
 });
 
+// // GET /posts (To retrieve all posts, including author details)
+// app.get("/posts", async (req, res) => {
+//   try {
+
+//   } catch (e) {
+
+//   }
+// });
+
 // PORT configuration
 const port = process.env.PORT || 8000;
 

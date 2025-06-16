@@ -52,4 +52,6 @@ export const validatePostEnteredInfo = function(req, res, next) {
   if (!userId) {
     return res.status(404).json({ message: "User ID is Required!" });
   }
+
+  next();
 }
