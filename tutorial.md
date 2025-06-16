@@ -366,3 +366,44 @@ Sample Output:
     }
 }
 ```
+
+#### DELETE /users/:id
+
+We will add record validation, to check if the record exists. Reason being, I have been running into my catch block without understanding why, so this is a solution.
+
+In the `validations.js`:
+
+```js
+export const validateExistingRecord = function(req, res, next) {
+  const {id} = req.params;
+  const existingUser = myClient.user.findUnique({
+    where: {
+      id
+    }
+  });
+
+  if (!existingUser) {
+    return res.status(404).json({ message: "Record Not Found!" });
+  }
+
+  next();
+};
+```
+
+> **Note:** We will also export our client from `index.js` and import is as a named export in `validations.js`.
+
+In `index.js` :
+
+Add the keyword `export`
+
+```js
+export const myClient = new PrismaClient();
+```
+
+In `validations.js`:
+
+```js
+import {myClient} from '../index.js'
+```
+
+Take note of the directory, particularly for me, I hadn't saved it in the same directory.

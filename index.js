@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { validateEnteredInfo } from "./run_test/validations.js";
+import { validateEnteredInfo, validateExistingRecord } from "./run_test/validations.js";
 
 dotenv.config({ path: ".env" }); // read environment variables
 const app = express(); // initialize Express
 app.use(express.json());
-const myClient = new PrismaClient();
+export const myClient = new PrismaClient();
 
 // CRUD operations
 
@@ -58,7 +58,7 @@ app.get("/users", async (_req, res) => {
 });
 
 // GET /users/:id (get a specific user and all their related posts)
-app.get("/users/:id", async (req, res) => {
+app.get("/users/:id",validateExistingRecord, async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -80,7 +80,7 @@ app.get("/users/:id", async (req, res) => {
 });
 
 // PATCH /users/:id (partially update a user's details)
-app.patch("/users/:id", async (req, res) => {
+app.patch("/users/:id",validateExistingRecord, async (req, res) => {
     try {
         const { id } = req.params;
         const { firstName, lastName} = req.body
@@ -94,6 +94,25 @@ app.patch("/users/:id", async (req, res) => {
             }
         });
         res.status(200).json({ message: `User '${id}' Updated Successfully`, updatedUser})
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Something Went Wrong!😓" });
+    }
+});
+
+// DELETE /users/:id (soft-delete a specific user)
+app.delete("/users/:id",validateExistingRecord, async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const deletedUser = await myClient.user.update({
+            where: {
+                id
+            }, data: {
+                isDeleted: true // performs a soft-delete
+            }
+        });
+        res.status(200).json({ message: `User '${id}' Deleted Successfully`, deletedUser });
     } catch (e) {
         console.log(e);
         res.status(400).json({ message: "Something Went Wrong!😓" });
