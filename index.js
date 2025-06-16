@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { validateUserEnteredInfo, validateExistingRecord, validatePostEnteredInfo } from "./controllers/validations.controller.js";
+import { validateUserEnteredInfo, validateExistingRecord, validatePostEnteredInfo, validateIfDeleted } from "./controllers/validations.controller.js";
 
 dotenv.config({ path: ".env" }); // read environment variables
 const app = express(); // initialize Express
@@ -204,6 +204,25 @@ app.put("/posts/:id",validatePostEnteredInfo, async (req, res) => {
       }
     });
     res.status(200).json({ message: "Post Updated Successfully", updated_post: updatedPost });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something Went Wrong!😓" });
+  }
+});
+
+// DELETE /posts/:id (soft delete a post record)
+app.delete("/posts/:id",validateIfDeleted , async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedPost = await myClient.post.update({
+      where: {
+        id
+      }, data: {
+        isDeleted: true
+      }
+    });
+    res.status(200).json({ message: `Post '${id}' Deleted Successfully!`, deleted_post: deletedPost });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Something Went Wrong!😓" });

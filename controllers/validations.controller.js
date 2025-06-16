@@ -55,3 +55,19 @@ export const validatePostEnteredInfo = function(req, res, next) {
 
   next();
 }
+
+export const validateIfDeleted = async function (req, res, next) {
+  const { id } = req.params;
+
+  const postToBeDeleted = await myClient.post.findFirst({
+    where: {
+      id,
+      isDeleted: true
+    }
+  });
+  if (postToBeDeleted) {
+    return res.status(400).json({ message: `Post '${id}' Already Deleted!`})
+  }
+
+  next();
+}

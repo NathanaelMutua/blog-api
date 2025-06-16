@@ -648,3 +648,60 @@ Sample output:
     }
 }
 ```
+
+#### DELETE /posts/:id (Perform a soft delete on a post)
+
+This will change the `isDeleted` field of the specific post to `true`
+
+The code in `index.js`:
+
+```js
+app.delete("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedPost = await myClient.post.update({
+      where: {
+        id
+      }, data: {
+        isDeleted: true
+      }
+    });
+    res.status(200).json({ message: `Post '${id}' Deleted Successfully!`, deleted_post: deletedPost });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something Went Wrong!😓" });
+  }
+});
+```
+
+Sample URL:
+
+```bash
+http://127.0.0.1:8000/posts/9b25f8fd-3c94-46e0-a00b-1dc184290734
+```
+
+Sample Output:
+
+```json
+{
+    "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Deleted Successfully!",
+    "deleted_post": {
+        "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
+        "title": "Bought a new dress😍",
+        "content": "I can't believe my eyes 😊? #YOLO",
+        "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+        "createdAt": "2025-06-16T11:13:06.651Z",
+        "latUpdated": "2025-06-16T14:41:30.110Z",
+        "isDeleted": true
+    }
+}
+```
+
+Sample Output on repeated entry:
+
+```json
+{
+    "message": "Post '9b25f8fd-3c94-46e0-a00b-1dc184290734' Already Deleted!"
+}
+```
