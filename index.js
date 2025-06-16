@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { validateUserEnteredInfo, validateExistingRecord, validatePostEnteredInfo } from "./run_test/validations.js";
+import { validateUserEnteredInfo, validateExistingRecord, validatePostEnteredInfo } from "./controllers/validations.controller.js";
 
 dotenv.config({ path: ".env" }); // read environment variables
 const app = express(); // initialize Express
@@ -184,6 +184,29 @@ app.get("/posts/:id", async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status.apply(400).json({ message: "Something Went Wrong!😓" });
+  }
+});
+
+// PUT /posts/:id (update a specific post)
+app.put("/posts/:id",validatePostEnteredInfo, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { title, content, userId } = req.body;
+
+    const updatedPost = await myClient.post.update({
+      where: {
+        id
+      }, data: {
+        title,
+        content,
+        userId
+      }
+    });
+    res.status(200).json({ message: "Post Updated Successfully", updated_post: updatedPost });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something Went Wrong!😓" });
   }
 });
 

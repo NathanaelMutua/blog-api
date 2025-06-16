@@ -541,7 +541,7 @@ app.get("/posts", async (req, res) => {
 }
 ```
 
-### GET /posts/:id (Retireving a specific user)
+#### GET /posts/:id (Retireving a specific user)
 
 This block will make a request for a specific post calling its Id by retrieving it from the URL parameters.
 
@@ -590,6 +590,61 @@ Sample output:
             "lastName": "Mwangi",
             "emailAddress": "brianonmwangi@gmail.com"
         }
+    }
+}
+```
+
+#### PUT /post/:id (update a post)
+
+The code in `index.js`:
+
+```js
+app.put("/posts/:id",validatePostEnteredInfo, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { title, content, userId } = req.body;
+
+    const updatedPost = await myClient.post.update({
+      where: {
+        id
+      }, data: {
+        title,
+        content,
+        userId
+      }
+    });
+    res.status(200).json({ message: "Post Updated Successfully", updated_post: updatedPost });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Something Went Wrong!😓" });
+  }
+});
+```
+
+Sample Input:
+
+```json
+{
+    "title": "Bought a new dress😍",
+    "content": "I can't believe my eyes 😊? #YOLO",
+    "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841"
+}
+```
+
+Sample output:
+
+```json
+{
+    "message": "Post Updated Successfully",
+    "updated_post": {
+        "id": "9b25f8fd-3c94-46e0-a00b-1dc184290734",
+        "title": "Bought a new dress😍",
+        "content": "I can't believe my eyes 😊? #YOLO",
+        "userId": "1e1ba3cd-c02b-4af6-85c7-4609df7c5841",
+        "createdAt": "2025-06-16T11:13:06.651Z",
+        "latUpdated": "2025-06-16T14:24:55.680Z",
+        "isDeleted": false
     }
 }
 ```
